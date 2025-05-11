@@ -10,14 +10,29 @@ const { log } = require("console");
 
 const server = http.createServer(app);
 
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+  origin: "https://salestrackerdheeraj.vercel.app",
+  methods: ["GET", "POST"],
+  credentials: true,
+}));
 
+
+// const io = new Server(server, {
+//   cors: {
+//     origin: "*",
+//     // methods: ["GET", "POST"],
+//   },
+// });
 const io = new Server(server, {
   cors: {
-    origin: "*",
-    // methods: ["GET", "POST"],
+    origin: "https://salestrackerdheeraj.vercel.app",
+    methods: ["GET", "POST"],
+    credentials: true,
   },
+  transports: ["websocket", "polling"],
 });
+
 
 app.get("/", (req, res) => {
   res.send("hello location");
