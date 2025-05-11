@@ -105,7 +105,7 @@ export const connectWithPeerServer = () => {
     host: peerHost,
     port: parseInt(peerPort, 10),
     path: peerPath,
-    // secure: peerSecure,
+    secure: true,
   });
 
   peer.on("open", (id) => {
