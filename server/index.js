@@ -111,20 +111,47 @@ io.on("connection", (socket) => {
   });
 });
 
-// const peerServer = PeerServer({ port: 9000, path: "/peer" });
+// Xirsys TURN credentials (hardcoded)
+const xirsysIceServers = [
+  {
+    urls: "stun:ws-turn1.xirsys.com",
+  },
+  {
+    urls: [
+      "turn:ws-turn1.xirsys.com:80?transport=udp",
+      "turn:ws-turn1.xirsys.com:3478?transport=udp",
+      "turn:ws-turn1.xirsys.com:80?transport=tcp",
+      "turn:ws-turn1.xirsys.com:3478?transport=tcp",
+      "turns:ws-turn1.xirsys.com:443?transport=tcp",
+      "turns:ws-turn1.xirsys.com:5349?transport=tcp",
+    ],
+    username:
+      "Dheeraj",
+    credential:
+      "65dcc07c-313f-11f0-aad9-0242ac150003",
+  },
+];
 const peerServer = ExpressPeerServer(server, {
+  debug: true,
   path: "/peer",
   config: {
-      iceServers: [
-        { urls: "stun:stun.l.google.com:19302" },
-        {
-          urls: "turn:openrelay.metered.ca:80",
-          username: "openrelayproject",
-          credential: "openrelayproject"
-        }
-      ]
-    }
+    iceServers: xirsysIceServers,
+  },
 });
+// const peerServer = PeerServer({ port: 9000, path: "/peer" });
+// const peerServer = ExpressPeerServer(server, {
+//   path: "/peer",
+//   config: {
+//       iceServers: [
+//         { urls: "stun:stun.l.google.com:19302" },
+//         {
+//           urls: "turn:openrelay.metered.ca:80",
+//           username: "openrelayproject",
+//           credential: "openrelayproject"
+//         }
+//       ]
+//     }
+// });
 app.use("/peerjs", peerServer);
 
 const PORT = process.env.PORT || 3003;
