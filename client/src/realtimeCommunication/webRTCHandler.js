@@ -106,16 +106,16 @@ export const connectWithPeerServer = () => {
     port: parseInt(peerPort, 10),
     path: peerPath,
     secure: true,
-    config: {
-    iceServers: [
-      { urls: "stun:stun.l.google.com:19302" },
-      {
-        urls: "turn:openrelay.metered.ca:80",
-        username: "openrelayproject",
-        credential: "openrelayproject"
-      }
-    ]
-  }
+  //   config: {
+  //   iceServers: [
+  //     { urls: "stun:stun.l.google.com:19302" },
+  //     {
+  //       urls: "turn:openrelay.metered.ca:80",
+  //       username: "openrelayproject",
+  //       credential: "openrelayproject"
+  //     }
+  //   ]
+  // }
   });
 
   peer.on("open", (id) => {
