@@ -111,33 +111,30 @@ io.on("connection", (socket) => {
   });
 });
 
-// Xirsys TURN credentials (hardcoded)
-const xirsysIceServers = [
-  {
-    urls: "stun:ws-turn1.xirsys.com",
-  },
-  {
-    urls: [
-      "turn:ws-turn1.xirsys.com:80?transport=udp",
-      "turn:ws-turn1.xirsys.com:3478?transport=udp",
-      "turn:ws-turn1.xirsys.com:80?transport=tcp",
-      "turn:ws-turn1.xirsys.com:3478?transport=tcp",
-      "turns:ws-turn1.xirsys.com:443?transport=tcp",
-      "turns:ws-turn1.xirsys.com:5349?transport=tcp",
-    ],
-    username:
-      "Dheeraj",
-    credential:
-      "65dcc07c-313f-11f0-aad9-0242ac150003",
-  },
-];
 const peerServer = ExpressPeerServer(server, {
   debug: true,
   path: "/peer",
   config: {
-    iceServers: xirsysIceServers,
+    iceServers: [
+      {
+        urls: "stun:ws-turn1.xirsys.com", // valid Xirsys STUN
+      },
+      {
+        urls: [
+          "turn:ws-turn1.xirsys.com:80?transport=udp",
+          "turn:ws-turn1.xirsys.com:3478?transport=udp",
+          "turn:ws-turn1.xirsys.com:80?transport=tcp",
+          "turn:ws-turn1.xirsys.com:3478?transport=tcp",
+          "turns:ws-turn1.xirsys.com:443?transport=tcp",
+          "turns:ws-turn1.xirsys.com:5349?transport=tcp",
+        ],
+        username: "Dheeraj",
+        credential: "65dcc07c-313f-11f0-aad9-0242ac150003",
+      },
+    ],
   },
 });
+
 // const peerServer = PeerServer({ port: 9000, path: "/peer" });
 // const peerServer = ExpressPeerServer(server, {
 //   path: "/peer",
