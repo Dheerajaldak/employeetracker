@@ -37,6 +37,52 @@ const io = new Server(server, {
 app.get("/", (req, res) => {
   res.send("hello location");
 });
+const https = require("https");
+app.get("/ice-servers", (req, res) => {
+  const body = JSON.stringify({ format: "urls" });
+
+  const authString = Buffer.from("Dheeraj:65dcc07c-313f-11f0-aad9-0242ac150003").toString("base64");
+
+  const options = {
+    host: "global.xirsys.net",
+    path: "/_turn/salestrack",
+    method: "PUT",
+    headers: {
+      Authorization: "Basic " + authString,
+      "Content-Type": "application/json",
+      "Content-Length": body.length,
+    },
+  };
+
+  console.log("Sending ICE request to Xirsys with options:", options);
+
+  const request = https.request(options, (response) => {
+    let data = "";
+
+    response.on("data", (chunk) => {
+      data += chunk;
+    });
+
+    response.on("end", () => {
+      try {
+        console.log("Xirsys response raw:", data);
+        const parsedData = JSON.parse(data);
+        res.json(parsedData.v);
+      } catch (error) {
+        console.error("Failed to parse Xirsys response:", error);
+        res.status(500).json({ error: "Failed to parse ICE server response" });
+      }
+    });
+  });
+
+  request.on("error", (error) => {
+    console.error("Error requesting ICE servers from Xirsys:", error);
+    res.status(500).json({ error: "Failed to fetch ICE servers from Xirsys" });
+  });
+
+  request.write(body);
+  request.end();
+});
 
 let onlineUsers = {};
 let videoRooms = {};
@@ -68,16 +114,16 @@ io.on("connection", (socket) => {
 // const peerServer = PeerServer({ port: 9000, path: "/peer" });
 const peerServer = ExpressPeerServer(server, {
   path: "/peer",
-  config: {
-      iceServers: [
-        { urls: "stun:stun.l.google.com:19302" },
-        {
-          urls: "turn:openrelay.metered.ca:80",
-          username: "openrelayproject",
-          credential: "openrelayproject"
-        }
-      ]
-    }
+  // config: {
+  //     iceServers: [
+  //       { urls: "stun:stun.l.google.com:19302" },
+  //       {
+  //         urls: "turn:openrelay.metered.ca:80",
+  //         username: "openrelayproject",
+  //         credential: "openrelayproject"
+  //       }
+  //     ]
+  //   }
 });
 app.use("/peerjs", peerServer);
 
