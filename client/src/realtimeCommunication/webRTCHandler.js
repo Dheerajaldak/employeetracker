@@ -90,88 +90,88 @@ export const getAccessToLocalStream = async () => {
   return Boolean(localStream);
 };
 
-// export const connectWithPeerServer = () => {
-//   // const peerHost = import.meta.env.VITE_PEER_HOST || "localhost";
-//   // const peerPort = import.meta.env.VITE_PEER_PORT || 3003;
-//   // const peerPath = import.meta.env.VITE_PEER_PATH || "/peerjs/peer";
-//   const peerHost = import.meta.env.VITE_PEER_HOST ;
-//   const peerPort = import.meta.env.VITE_PEER_PORT ;
-//   const peerPath = import.meta.env.VITE_PEER_PATH ;
-//   // const peerSecure =
-//   //   import.meta.env.VITE_PEER_SECURE === "true" || window.location.protocol === "https:";
+export const connectWithPeerServer = () => {
+  // const peerHost = import.meta.env.VITE_PEER_HOST || "localhost";
+  // const peerPort = import.meta.env.VITE_PEER_PORT || 3003;
+  // const peerPath = import.meta.env.VITE_PEER_PATH || "/peerjs/peer";
+  const peerHost = import.meta.env.VITE_PEER_HOST ;
+  const peerPort = import.meta.env.VITE_PEER_PORT ;
+  const peerPath = import.meta.env.VITE_PEER_PATH ;
+  // const peerSecure =
+  //   import.meta.env.VITE_PEER_SECURE === "true" || window.location.protocol === "https:";
 
-//   peer = new Peer(undefined, {
+  peer = new Peer(undefined, {
 
-//     host: peerHost,
-//     port: parseInt(peerPort, 10),
-//     path: peerPath,
-//     secure: true,
-//     config: {
-//     iceServers: [
-//       { urls: "stun:stun.l.google.com:19302" },
-//       {
-//         urls: "turn:openrelay.metered.ca:80",
-//         username: "openrelayproject",
-//         credential: "openrelayproject"
-//       }
-//     ]
-//   }
-//   });
-
-//   peer.on("open", (id) => {
-//     console.log(" My peer id is: ", id);
-//     peerId = id;
-//   });
-
-//   peer.on("call", async (call) => {
-//     const localStream = store.getState().videoRooms.localStream;
-//     call.answer(localStream);
-//     call.on("stream", (remoteStream) => {
-//       console.log("remote stream came");
-//       store.dispatch(setRemoteStreams(remoteStream));
-//     });
-//   });
-// };
-export const connectWithPeerServer = async () => {
-  const peerHost = import.meta.env.VITE_PEER_HOST;
-  const peerPort = import.meta.env.VITE_PEER_PORT;
-  const peerPath = import.meta.env.VITE_PEER_PATH;
-
-  try {
-    const response = await fetch(`${import.meta.env.VITE_SOCKET_URL}/ice-servers`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch ICE servers");
-    }
-    const iceConfig = await response.json();
-
-    peer = new Peer(undefined, {
-      host: peerHost,
-      port: parseInt(peerPort, 10),
-      path: peerPath,
-      secure: true,
-      config: {
-        iceServers: [iceConfig], // Xirsys sends a single config object
-      },
-    });
-
-    peer.on("open", (id) => {
-      console.log("My peer id is:", id);
-      peerId = id;
-    });
-
-    peer.on("call", async (call) => {
-      const localStream = store.getState().videoRooms.localStream;
-      call.answer(localStream);
-      call.on("stream", (remoteStream) => {
-        console.log("Remote stream received");
-        store.dispatch(setRemoteStreams(remoteStream));
-      });
-    });
-
-  } catch (error) {
-    console.error("❌ Failed to fetch ICE servers or initialize PeerJS", error);
+    host: peerHost,
+    port: parseInt(peerPort, 10),
+    path: peerPath,
+    secure: true,
+    config: {
+    iceServers: [
+      { urls: "stun:stun.l.google.com:19302" },
+      {
+        urls: "turn:openrelay.metered.ca:80",
+        username: "openrelayproject",
+        credential: "openrelayproject"
+      }
+    ]
   }
+  });
+
+  peer.on("open", (id) => {
+    console.log(" My peer id is: ", id);
+    peerId = id;
+  });
+
+  peer.on("call", async (call) => {
+    const localStream = store.getState().videoRooms.localStream;
+    call.answer(localStream);
+    call.on("stream", (remoteStream) => {
+      console.log("remote stream came");
+      store.dispatch(setRemoteStreams(remoteStream));
+    });
+  });
 };
+// export const connectWithPeerServer = async () => {
+//   const peerHost = import.meta.env.VITE_PEER_HOST;
+//   const peerPort = import.meta.env.VITE_PEER_PORT;
+//   const peerPath = import.meta.env.VITE_PEER_PATH;
+
+//   try {
+//     const response = await fetch(`${import.meta.env.VITE_SOCKET_URL}/ice-servers`);
+//     if (!response.ok) {
+//       throw new Error("Failed to fetch ICE servers");
+//     }
+//     const iceConfig = await response.json();
+
+//     peer = new Peer(undefined, {
+//       host: peerHost,
+//       port: parseInt(peerPort, 10),
+//       path: peerPath,
+//       secure: true,
+//       config: {
+//         iceServers: [iceConfig], // Xirsys sends a single config object
+//       },
+//     });
+
+//     peer.on("open", (id) => {
+//       console.log("My peer id is:", id);
+//       peerId = id;
+//     });
+
+//     peer.on("call", async (call) => {
+//       const localStream = store.getState().videoRooms.localStream;
+//       call.answer(localStream);
+//       call.on("stream", (remoteStream) => {
+//         console.log("Remote stream received");
+//         store.dispatch(setRemoteStreams(remoteStream));
+//       });
+//     });
+
+//   } catch (error) {
+//     console.error("❌ Failed to fetch ICE servers or initialize PeerJS", error);
+//   }
+// };
 
 export const call = (data) => {
   const { newParticipantPeerId } = data;
