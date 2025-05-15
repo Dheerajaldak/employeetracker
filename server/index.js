@@ -114,16 +114,16 @@ io.on("connection", (socket) => {
 // const peerServer = PeerServer({ port: 9000, path: "/peer" });
 const peerServer = ExpressPeerServer(server, {
   path: "/peer",
-  // config: {
-  //     iceServers: [
-  //       { urls: "stun:stun.l.google.com:19302" },
-  //       {
-  //         urls: "turn:openrelay.metered.ca:80",
-  //         username: "openrelayproject",
-  //         credential: "openrelayproject"
-  //       }
-  //     ]
-  //   }
+  config: {
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" },
+        {
+          urls: "turn:openrelay.metered.ca:80",
+          username: "openrelayproject",
+          credential: "openrelayproject"
+        }
+      ]
+    }
 });
 app.use("/peerjs", peerServer);
 
