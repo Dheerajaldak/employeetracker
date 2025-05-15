@@ -116,6 +116,20 @@ export const connectWithPeerServer = () => {
   //     }
   //   ]
   // }
+    config: {
+    iceServers: [
+      {
+        urls: [
+          "turn:global.xirsys.net:3478?transport=udp",
+          "turn:global.xirsys.net:3478?transport=tcp",
+          "turns:global.xirsys.net:5349?transport=tcp",
+          "turns:global.xirsys.net:443?transport=tcp"
+        ],
+        username: "Dheeraj",
+        credential: "65dcc07c-313f-11f0-aad9-0242ac150003"
+      }
+    ]
+  }
   });
 
   peer.on("open", (id) => {
